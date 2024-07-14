@@ -1,0 +1,34 @@
+import pandas_datareader as web 
+import datetime 
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from scipy import stats
+
+start=datetime.datetime(2021,1,1)
+end=datetime.datetime(2022,1,1)
+bajaj=web.DataReader("BAJAJ-AUTO.NS","yahoo",start,end)
+nifty=web.DataReader("^NSEI","yahoo",start,end)
+
+bajaj['Close'].plot(label = 'Bajaj', figsize=(10,8))
+nifty['Close'].plot(label = 'Nifty')
+plt.legend()
+
+bajaj['Cumu'] = bajaj['Close']/bajaj['Close'].iloc[0]
+nifty['Cumu'] = nifty['Close']/nifty['Close'].iloc[0]
+bajaj['Cumu'].plot(label = 'Bajaj', figsize=(10,8))
+nifty['Cumu'].plot(label = 'Nifty')
+plt.legend()
+
+bajaj['daily_ret'] = bajaj['Close'].pct_change(1)
+nifty['daily_ret'] = nifty['Close'].pct_change(1)
+plt.scatter(bajaj['daily_ret'],nifty['daily_ret'])
+
+LR = stats.linregress(bajaj['daily_ret'].iloc[1:],nifty['daily_ret'].iloc[1:])
+
+Time=datetime.datetime(2022,6,8)
+
+date_1 = datetime.datetime(2022,5,11) 
+df_stock_1 = web.DataReader('bajaj', 'nifty', date_1, date_1) 
+df_stock_1.head()
+
